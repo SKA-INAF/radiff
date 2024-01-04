@@ -37,10 +37,10 @@ def load_ae_checkpoint(ae, ckpt_path, device):
         #     checkpoint['vae'], strict=False)
     # return ae
 
-def get_ae(ae_kwargs):
+def get_ae(ae_kwargs, logvar_init=None):
     ae_type = ae_kwargs["type"]
     if ae_type == "kl":
-        ae_kwargs.update({"logvar_init": ae_kwargs["logvar_init"]})
+        ae_kwargs.update({"logvar_init": logvar_init})
         return AutoencoderKL(**ae_kwargs['params'])
     elif ae_type == "vq":
         return VQModel(**ae_kwargs['params'])

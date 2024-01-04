@@ -1,0 +1,10 @@
+numpy
+tqdm
+torch
+torchvision
+astropy
+logzero
+wandb
+einops
+torchsummary
+omegaconf

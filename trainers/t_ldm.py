@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from torch.optim import AdamW
 from tqdm import tqdm
 
-from models import VQModel
+from models import VQModel, AutoencoderKL
 from models.ldm import LatentDiffusion
 from models.modules.ddim import DDIMSampler
 from trainers.t_base import BaseTrainer
@@ -21,7 +21,7 @@ class LDMTrainer(BaseTrainer):
         ), "Specify a checkpoint for the Autoencoder to train LDM"
 
         # setup autoencoder
-        self.ae = get_ae(ae_kwargs).to(self.device)
+        self.ae = get_ae(ae_kwargs, ldm_kwargs["logvar_init"]).to(self.device)
         self.ae.eval()
         for p in self.ae.parameters():
             p.requires_grad = False
@@ -71,6 +71,8 @@ class LDMTrainer(BaseTrainer):
     @torch.no_grad()
     def encode_to_z(self, x):
         z = self.ae.encode(x)
+        if isinstance(self.ae, AutoencoderKL):
+            z = z.sample()
         if isinstance(self.ae, VQModel):
             z = z[0]
         return z

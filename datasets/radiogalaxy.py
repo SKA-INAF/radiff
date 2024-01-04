@@ -22,7 +22,7 @@ def get_transforms(img_size=128):
             torch.nn.Tanh(),
             MinMaxNormalize(),
             Unsqueeze(),
-            T.Resize((img_size, img_size))
+            T.Resize((img_size, img_size), antialias=True)
         ])
 
 class RGDataset(Dataset):
@@ -48,7 +48,7 @@ class RGDataset(Dataset):
 
 if __name__ == '__main__':
     import sys
-    sys.path.append('/home/rsortino/inaf/radio-diffusion')
+    sys.path.append('/home/apilzer/Documents/inaf/radiff')
     rgtrain = RGDataset('data/rg-dataset/data',
                         'data/rg-dataset/train_all.txt')
     batch = next(iter(rgtrain))
